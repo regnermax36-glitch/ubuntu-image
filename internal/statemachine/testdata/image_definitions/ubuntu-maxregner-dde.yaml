@@ -1,0 +1,49 @@
+name: ubuntu-maxregner-dde
+display-name: Ubuntu MaxRegner DDE Edition
+revision: 1
+architecture: amd64
+series: jammy
+class: preinstalled
+kernel: linux-image-generic
+gadget:
+  url: "https://github.com/snapcore/pc-gadget.git"
+  branch: "classic"
+  type: "git"
+rootfs:
+  archive: ubuntu
+  flavor: maxregner
+  sources-list-deb822: true
+  components:
+    - main
+    - restricted
+    - universe
+    - multiverse
+  mirror: "http://archive.ubuntu.com/ubuntu/"
+  pocket: updates
+  seed:
+    urls:
+      - "git://git.launchpad.net/~ubuntu-core-dev/ubuntu-seeds/+git/"
+    branch: jammy
+    names:
+      - desktop
+      - minimal
+      - standard
+customization:
+  components:
+    - main
+    - restricted
+    - universe
+    - multiverse
+  extra-packages:
+    - name: ubuntudde-desktop
+  fstab:
+    - label: "writable"
+      mountpoint: "/"
+      filesystem-type: "ext4"
+      dump: false
+      fsck-order: 1
+artifacts:
+  img:
+    - name: ubuntu-maxregner-dde-amd64.img
+  manifest:
+    name: ubuntu-maxregner-dde-amd64.manifest
