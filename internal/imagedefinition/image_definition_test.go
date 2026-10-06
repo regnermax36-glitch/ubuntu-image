@@ -1,11 +1,13 @@
 package imagedefinition
 
 import (
+	"os"
 	"strings"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
 	"github.com/xeipuuv/gojsonschema"
+	"gopkg.in/yaml.v2"
 
 	"github.com/canonical/ubuntu-image/internal/arch"
 	"github.com/canonical/ubuntu-image/internal/helper"
@@ -108,6 +110,26 @@ deb http://archive.ubuntu.com/ubuntu/ jammy-proposed main universe multiverse re
 			asserter.AssertEqual(tc.expectedSourcesList, gotSourcesList)
 		})
 	}
+}
+
+func TestUbuntuMaxRegnerDDEImageDefinition(t *testing.T) {
+	t.Parallel()
+	asserter := helper.Asserter{T: t}
+
+	path := "../statemachine/testdata/image_definitions/ubuntu-maxregner-dde.yaml"
+	data, err := os.ReadFile(path)
+	asserter.AssertErrNil(err, true)
+
+	var imgDef ImageDefinition
+	err = yaml.Unmarshal(data, &imgDef)
+	asserter.AssertErrNil(err, true)
+
+	asserter.AssertEqual("ubuntu-maxregner-dde", imgDef.ImageName)
+	asserter.AssertEqual("Ubuntu MaxRegner DDE Edition", imgDef.DisplayName)
+	asserter.AssertEqual("jammy", imgDef.Series)
+	asserter.AssertEqual("amd64", imgDef.Architecture)
+	asserter.AssertEqual("maxregner", imgDef.Rootfs.Flavor)
+	asserter.AssertEqual(true, *imgDef.Rootfs.SourcesListDeb822)
 }
 
 // TestCustomErrors tests the custom json schema errors that we define
